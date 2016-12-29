@@ -36,3 +36,4 @@ $ docker run -d --name logstash -p 5044:5044 --link elastic:elasticsearch babim/
                  }
                }'
 ```
+Don't use base image ok :-)
