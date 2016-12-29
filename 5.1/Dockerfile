@@ -1,39 +1,38 @@
-FROM gliderlabs/alpine:3.4
+FROM babim/logstash:base
 
-MAINTAINER blacktop, https://github.com/blacktop
+# environment
+ENV LOGSTASH_PATH /usr/share/logstash/bin
+ENV PATH $LOGSTASH_PATH:$PATH
+# version
+ENV LOGSTASH_VERSION 5.1.1
+ENV LOGSTASH_TARBALL="https://artifacts.elastic.co/downloads/logstash/logstash-$LOGSTASH_VERSION.tar.gz"
 
-RUN apk-install openjdk8-jre tini su-exec
+# install logstash
+RUN wget -O logstash.tar.gz "$LOGSTASH_TARBALL"; \
+	dir="$(dirname "$LOGSTASH_PATH")"; \
+	\
+	mkdir -p "$dir"; \
+	tar -xf logstash.tar.gz --strip-components=1 -C "$dir"; \
+	rm logstash.tar.gz; \
+	\
+	export LS_SETTINGS_DIR="$dir/config"; \
+# if the "log4j2.properties" file exists (logstash 5.x), let's empty it out so we get the default: "logging only errors to the console"
+	if [ -f "$LS_SETTINGS_DIR/log4j2.properties" ]; then \
+		cp "$LS_SETTINGS_DIR/log4j2.properties" "$LS_SETTINGS_DIR/log4j2.properties.dist"; \
+		truncate -s 0 "$LS_SETTINGS_DIR/log4j2.properties"; \
+	fi; \
+	\
+# set up some file permissions
+	for userDir in \
+		"$dir/config" \
+		"$dir/data" \
+	; do \
+		if [ -d "$userDir" ]; then \
+			chown -R logstash:logstash "$userDir"; \
+		fi; \
+	done; \
+	\
+	logstash --version
 
-ENV LOGSTASH 5.1.1
-
-RUN apk-install libzmq bash
-RUN mkdir -p /usr/local/lib \
-  && ln -s /usr/lib/*/libzmq.so.3 /usr/local/lib/libzmq.so
-RUN apk-install -t .build-deps wget ca-certificates \
-  && cd /tmp \
-  && wget -O logstash-$LOGSTASH.tar.gz https://artifacts.elastic.co/downloads/logstash/logstash-$LOGSTASH.tar.gz \
-  && tar -xzf logstash-$LOGSTASH.tar.gz \
-  && mv logstash-$LOGSTASH /usr/share/logstash \
-  && adduser -DH -s /sbin/nologin logstash \
-  && rm -rf /tmp/* \
-  && apk del --purge .build-deps
-
-ENV PATH /usr/share/logstash/bin:/sbin:$PATH
-
-# necessary for 5.0+ (overriden via "--path.settings", ignored by < 5.0)
-ENV LS_SETTINGS_DIR /etc/logstash
-# comment out some troublesome configuration parameters
-#   path.log: logs should go to stdout
-#   path.config: No config files found: /etc/logstash/conf.d/*
-RUN set -ex \
-  && if [ -f "$LS_SETTINGS_DIR/logstash.yml" ]; then \
-  	sed -ri 's!^(path.log|path.config):!#&!g' "$LS_SETTINGS_DIR/logstash.yml"; \
-  fi
-
-VOLUME ["/etc/logstash/conf.d"]
-
-COPY config/logstash/logstash.yml /etc/logstash/
-COPY logstash-entrypoint.sh /
-
-ENTRYPOINT ["/logstash-entrypoint.sh"]
-CMD ["-e", ""]
+# clean temp and remove unneed apps
+RUN apk del --purge .fetch-deps ca-certificates openssl tar wget
