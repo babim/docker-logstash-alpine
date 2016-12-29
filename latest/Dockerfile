@@ -35,8 +35,4 @@ RUN wget -O logstash.tar.gz "$LOGSTASH_TARBALL"; \
 	logstash --version
 
 # clean temp and remove unneed apps
-<<<<<<< HEAD
-RUN apk del --purge .fetch-deps ca-certificates openssl tar wget
-=======
-RUN apk del --purge .fetch-deps ca-certificates openssl tar wget
->>>>>>> master
+RUN apk del --purge .fetch-deps ca-certificates openssl tar
