@@ -3,6 +3,11 @@ docker-logstash-alpine
 
 Alpine Linux based [Logstash](https://www.elastic.co/products/logstash) Docker Image
 
+### Credits
+Thanks
+* https://github.com/blacktop/docker-logstash-alpine
+* https://github.com/docker-library/logstash
+
 ### Getting Started
 
 Start Logstash with configuration file
@@ -30,7 +35,4 @@ $ docker run -d --name logstash -p 5044:5044 --link elastic:elasticsearch babim/
                    document_type => "%{[@metadata][type]}"
                  }
                }'
-### Credits
-Thanks
-* https://github.com/blacktop/docker-logstash-alpine
-* https://github.com/docker-library/logstash
+```
