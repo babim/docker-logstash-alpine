@@ -1,38 +1,44 @@
 FROM babim/logstash:base
 
-# environment
-ENV LOGSTASH_PATH /usr/share/logstash/bin
-ENV PATH $LOGSTASH_PATH:$PATH
-# version
-ENV LOGSTASH_VERSION 5.1.1
-ENV LOGSTASH_TARBALL="https://artifacts.elastic.co/downloads/logstash/logstash-$LOGSTASH_VERSION.tar.gz"
+ENV VERSION 6.3.0
+ENV DOWNLOAD_URL https://artifacts.elastic.co/downloads/logstash
+ENV TARBALL "${DOWNLOAD_URL}/logstash-${VERSION}.tar.gz"
+ENV TARBALL_ASC "${DOWNLOAD_URL}/logstash-${VERSION}.tar.gz.asc"
+ENV TARBALL_SHA ""
+ENV GPG_KEY "46095ACC8548582C1A2699A9D27D666CD88E42B4"
 
-# install logstash
-RUN wget -O logstash.tar.gz "$LOGSTASH_TARBALL"; \
-	dir="$(dirname "$LOGSTASH_PATH")"; \
-	\
-	mkdir -p "$dir"; \
-	tar -xf logstash.tar.gz --strip-components=1 -C "$dir"; \
-	rm logstash.tar.gz; \
-	\
-	export LS_SETTINGS_DIR="$dir/config"; \
-# if the "log4j2.properties" file exists (logstash 5.x), let's empty it out so we get the default: "logging only errors to the console"
-	if [ -f "$LS_SETTINGS_DIR/log4j2.properties" ]; then \
-		cp "$LS_SETTINGS_DIR/log4j2.properties" "$LS_SETTINGS_DIR/log4j2.properties.dist"; \
-		truncate -s 0 "$LS_SETTINGS_DIR/log4j2.properties"; \
-	fi; \
-	\
-# set up some file permissions
-	for userDir in \
-		"$dir/config" \
-		"$dir/data" \
-	; do \
-		if [ -d "$userDir" ]; then \
-			chown -R logstash:logstash "$userDir"; \
-		fi; \
-	done; \
-	\
-	logstash --version
+RUN set -ex \
+  && cd /tmp \
+  && wget --progress=bar:force -O logstash.tar.gz "$TARBALL"; \
+  if [ "$TARBALL_SHA" ]; then \
+  echo "$TARBALL_SHA *logstash.tar.gz" | sha512sum -c -; \
+  fi; \
+  \
+  if [ "$TARBALL_ASC" ]; then \
+  wget --progress=bar:force -O logstash.tar.gz.asc "$TARBALL_ASC"; \
+  export GNUPGHOME="$(mktemp -d)"; \
+  ( gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
+  || gpg --keyserver pgp.mit.edu --recv-keys "$GPG_KEY" \
+  || gpg --keyserver keyserver.pgp.com --recv-keys "$GPG_KEY" ); \
+  gpg --batch --verify logstash.tar.gz.asc logstash.tar.gz; \
+  rm -rf "$GNUPGHOME" logstash.tar.gz.asc || true; \
+  fi; \
+  tar -xzf logstash.tar.gz \
+  && mv logstash-$VERSION /usr/share/logstash \
+  && rm -rf /tmp/* \
+  && apk del --purge .build-deps
 
-# clean temp and remove unneed apps
-RUN apk del --purge .fetch-deps ca-certificates openssl tar
+RUN apk add --no-cache libc6-compat
+
+ENV PATH /usr/share/logstash/bin:/sbin:$PATH
+ENV LS_SETTINGS_DIR /usr/share/logstash/config
+ENV LANG='en_US.UTF-8' LC_ALL='en_US.UTF-8'
+
+RUN set -ex; \
+  if [ -f "$LS_SETTINGS_DIR/log4j2.properties" ]; then \
+  cp "$LS_SETTINGS_DIR/log4j2.properties" "$LS_SETTINGS_DIR/log4j2.properties.dist"; \
+  truncate -s 0 "$LS_SETTINGS_DIR/log4j2.properties"; \
+  fi
+
+COPY config/logstash /usr/share/logstash/config/
+COPY config/pipeline/default.conf /usr/share/logstash/pipeline/logstash.conf
