@@ -3,7 +3,7 @@ FROM babim/logstash:base
 ENV LOGSTASH 2.3.4
 
 RUN cd /tmp \
-  && wget -O logstash-$LOGSTASH.tar.gz https://download.elastic.co/logstash/logstash/logstash-$LOGSTASH.tar.gz \
+  && wget -q --no-check-certificate -O logstash-$LOGSTASH.tar.gz https://download.elastic.co/logstash/logstash/logstash-$LOGSTASH.tar.gz \
   && tar -xzf logstash-$LOGSTASH.tar.gz \
   && mv logstash-$LOGSTASH /usr/share/logstash \
   && adduser -DH -s /sbin/nologin logstash \

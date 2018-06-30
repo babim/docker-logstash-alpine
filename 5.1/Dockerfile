@@ -1,14 +1,11 @@
 FROM babim/logstash:base
 
-# environment
-ENV LOGSTASH_PATH /usr/share/logstash/bin
-ENV PATH $LOGSTASH_PATH:$PATH
 # version
 ENV LOGSTASH_VERSION 5.1.1
 ENV LOGSTASH_TARBALL="https://artifacts.elastic.co/downloads/logstash/logstash-$LOGSTASH_VERSION.tar.gz"
 
 # install logstash
-RUN wget -O logstash.tar.gz "$LOGSTASH_TARBALL"; \
+RUN wget -q --no-check-certificate -O logstash.tar.gz "$LOGSTASH_TARBALL"; \
 	dir="$(dirname "$LOGSTASH_PATH")"; \
 	\
 	mkdir -p "$dir"; \

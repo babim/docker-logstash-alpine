@@ -3,14 +3,12 @@ FROM babim/logstash:base
 ENV LOGSTASH 2.4.1
 
 RUN cd /tmp \
-  && wget -O logstash-$LOGSTASH.tar.gz https://download.elastic.co/logstash/logstash/logstash-$LOGSTASH.tar.gz \
+  && wget -q --no-check-certificate -O logstash-$LOGSTASH.tar.gz https://download.elastic.co/logstash/logstash/logstash-$LOGSTASH.tar.gz \
   && tar -xzf logstash-$LOGSTASH.tar.gz \
   && mv logstash-$LOGSTASH /usr/share/logstash \
   && adduser -DH -s /sbin/nologin logstash \
   && rm -rf /tmp/* \
   && apk del --purge build-deps
-
-ENV PATH /usr/share/logstash/bin:$PATH
 
 # necessary for 5.0+ (overriden via "--path.settings", ignored by < 5.0)
 ENV LS_SETTINGS_DIR /etc/logstash
