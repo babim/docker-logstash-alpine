@@ -12,7 +12,7 @@ RUN adduser -DH -s /sbin/nologin logstash
 
 RUN mkdir -p /usr/local/lib \
 	&& ln -s /usr/lib/*/libzmq.so.3 /usr/local/lib/libzmq.so
-RUN apk add --no-cache -t build-deps wget ca-certificates gnupg openssl
+RUN apk add --no-cache wget ca-certificates gnupg openssl
 
 COPY docker-entrypoint.sh /
 

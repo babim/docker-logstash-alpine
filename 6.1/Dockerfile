@@ -10,7 +10,7 @@ RUN set -ex \
   tar -xzf logstash.tar.gz \
   && mv logstash-$VERSION /usr/share/logstash \
   && rm -rf /tmp/* \
-  && apk del .build-deps  wget
+  && apk del --purge wget ca-certificates gnupg openssl
 
 RUN apk add --no-cache libc6-compat
 

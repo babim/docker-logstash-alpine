@@ -7,7 +7,7 @@ RUN cd /tmp \
   && tar -xzf logstash-$LOGSTASH.tar.gz \
   && mv logstash-$LOGSTASH /usr/share/logstash \
   && rm -rf /tmp/* \
-  && apk del build-deps
+  && apk del --purge wget ca-certificates gnupg openssl
 
 ENV PATH /usr/share/logstash/bin:$PATH
 

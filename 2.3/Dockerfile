@@ -8,7 +8,7 @@ RUN cd /tmp \
   && mv logstash-$LOGSTASH /usr/share/logstash \
   && adduser -DH -s /sbin/nologin logstash \
   && rm -rf /tmp/* \
-  && apk del build-deps
+  && apk del --purge wget ca-certificates gnupg openssl
 
 ENV PATH /usr/share/logstash/bin:$PATH
 
