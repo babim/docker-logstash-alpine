@@ -9,7 +9,7 @@ RUN cd /tmp \
   tar -xzf logstash.tar.gz \
   && mv logstash-$LS_VERSION /usr/share/logstash \
   && rm -rf /tmp/* \
-  && apk del .build-deps ca-certificates openssl tar wget
+  && apk del .build-deps  wget
 
 RUN set -ex; \
   if [ -f "$LS_SETTINGS_DIR/log4j2.properties" ]; then \
