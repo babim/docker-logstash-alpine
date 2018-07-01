@@ -5,7 +5,7 @@ ENV LOGSTASH_VERSION 5.1.1
 ENV LOGSTASH_TARBALL="https://artifacts.elastic.co/downloads/logstash/logstash-$LOGSTASH_VERSION.tar.gz"
 
 # install logstash
-RUN wget --no-check-certificate -O logstash.tar.gz "$LOGSTASH_TARBALL"; \
+RUN wget --no-check-certificate --progress=bar:force -O logstash.tar.gz "$LOGSTASH_TARBALL"; \
 	dir="$(dirname "$LOGSTASH_PATH")"; \
 	\
 	mkdir -p "$dir"; \

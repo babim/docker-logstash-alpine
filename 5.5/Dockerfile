@@ -5,7 +5,7 @@ ENV LOGSTASH_URL "https://artifacts.elastic.co/downloads/logstash"
 ENV LOGSTASH_TARBALL "$LOGSTASH_URL/logstash-${LS_VERSION}.tar.gz"
 
 RUN cd /tmp \
-  && wget --no-check-certificate -O logstash.tar.gz "$LOGSTASH_TARBALL"; \
+  && wget --no-check-certificate --progress=bar:force -O logstash.tar.gz "$LOGSTASH_TARBALL"; \
   tar -xzf logstash.tar.gz \
   && mv logstash-$LS_VERSION /usr/share/logstash \
   && rm -rf /tmp/* \

@@ -6,7 +6,7 @@ ENV TARBALL "${DOWNLOAD_URL}/logstash-${VERSION}.tar.gz"
 
 RUN set -ex \
   && cd /tmp \
-  && wget --no-check-certificate -O logstash.tar.gz "$TARBALL"; \
+  && wget --no-check-certificate --progress=bar:force -O logstash.tar.gz "$TARBALL"; \
   tar -xzf logstash.tar.gz \
   && mv logstash-$VERSION /usr/share/logstash \
   && rm -rf /tmp/* \

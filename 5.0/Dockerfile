@@ -3,7 +3,7 @@ FROM babim/logstash:base
 ENV LOGSTASH 5.0.2
 
 RUN cd /tmp \
-  && wget --no-check-certificate -O logstash-$LOGSTASH.tar.gz https://artifacts.elastic.co/downloads/logstash/logstash-$LOGSTASH.tar.gz \
+  && wget --no-check-certificate --progress=bar:force -O logstash-$LOGSTASH.tar.gz https://artifacts.elastic.co/downloads/logstash/logstash-$LOGSTASH.tar.gz \
   && tar -xzf logstash-$LOGSTASH.tar.gz \
   && mv logstash-$LOGSTASH /usr/share/logstash \
   && rm -rf /tmp/* \
