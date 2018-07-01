@@ -6,11 +6,11 @@ ENV TARBALL "${DOWNLOAD_URL}/logstash-${VERSION}.tar.gz"
 
 RUN set -ex \
   && cd /tmp \
-  && wget -q --no-check-certificate -O logstash.tar.gz "$TARBALL"; \
+  && wget --no-check-certificate -O logstash.tar.gz "$TARBALL"; \
   tar -xzf logstash.tar.gz \
   && mv logstash-$VERSION /usr/share/logstash \
   && rm -rf /tmp/* \
-  && apk del --purge .build-deps ca-certificates openssl tar wget
+  && apk del .build-deps ca-certificates openssl tar wget
 
 RUN set -ex; \
   if [ -f "$LS_SETTINGS_DIR/log4j2.properties" ]; then \

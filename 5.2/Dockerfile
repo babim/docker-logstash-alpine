@@ -5,11 +5,11 @@ ENV LOGSTASH_URL "https://artifacts.elastic.co/downloads/logstash"
 ENV LOGSTASH_TARBALL "$LOGSTASH_URL/logstash-${LS_VERSION}.tar.gz"
 
 RUN cd /tmp \
-  && wget -q --no-check-certificate -O logstash.tar.gz "$LOGSTASH_TARBALL"; \
+  && wget --no-check-certificate -O logstash.tar.gz "$LOGSTASH_TARBALL"; \
   tar -xzf logstash.tar.gz \
   && mv logstash-$LS_VERSION /usr/share/logstash \
   && rm -rf /tmp/* \
-  && apk del --purge .build-deps ca-certificates openssl tar wget
+  && apk del .build-deps ca-certificates openssl tar wget
 
 RUN set -ex; \
   if [ -f "$LS_SETTINGS_DIR/log4j2.properties" ]; then \

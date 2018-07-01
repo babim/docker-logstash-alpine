@@ -5,7 +5,7 @@ ENV LOGSTASH_VERSION 5.1.1
 ENV LOGSTASH_TARBALL="https://artifacts.elastic.co/downloads/logstash/logstash-$LOGSTASH_VERSION.tar.gz"
 
 # install logstash
-RUN wget -q --no-check-certificate -O logstash.tar.gz "$LOGSTASH_TARBALL"; \
+RUN wget --no-check-certificate -O logstash.tar.gz "$LOGSTASH_TARBALL"; \
 	dir="$(dirname "$LOGSTASH_PATH")"; \
 	\
 	mkdir -p "$dir"; \
@@ -32,4 +32,4 @@ RUN wget -q --no-check-certificate -O logstash.tar.gz "$LOGSTASH_TARBALL"; \
 	logstash --version
 
 # clean temp and remove unneed apps
-RUN apk del --purge .fetch-deps ca-certificates openssl tar
+RUN apk del .fetch-deps ca-certificates openssl tar
