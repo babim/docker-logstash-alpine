@@ -16,12 +16,6 @@ RUN apk add --no-cache wget ca-certificates gnupg openssl
 
 COPY docker-entrypoint.sh /
 
-# environment
-ENV LOGSTASH_PATH /usr/share/logstash/bin
-ENV PATH $LOGSTASH_PATH:$PATH
-ENV LS_SETTINGS_DIR /usr/share/logstash/config
-ENV LANG='en_US.UTF-8' LC_ALL='en_US.UTF-8'
-
 VOLUME ["/etc/logstash/conf.d"]
 EXPOSE 9600 5044
 ENTRYPOINT ["/docker-entrypoint.sh"]

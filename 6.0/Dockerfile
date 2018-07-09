@@ -22,3 +22,10 @@ RUN set -ex; \
 
 COPY config/logstash /usr/share/logstash/config/
 COPY config/pipeline/default.conf /usr/share/logstash/pipeline/logstash.conf
+
+# environment
+ENV LOGSTASH_PATH /usr/share/logstash/bin
+ENV LS_SETTINGS_DIR /usr/share/logstash/config
+ENV PATH $LOGSTASH_PATH:$PATH
+ENV LANG='en_US.UTF-8' LC_ALL='en_US.UTF-8'
+ENV PATH /usr/share/logstash/bin:/sbin:$PATH
