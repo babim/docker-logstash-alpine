@@ -9,6 +9,10 @@ RUN cd /tmp \
   && rm -rf /tmp/* \
   && apk del --purge wget ca-certificates gnupg openssl
 
+# environment
+ENV LOGSTASH_PATH /usr/share/logstash/bin
+ENV PATH $LOGSTASH_PATH:$PATH
+ENV LANG='en_US.UTF-8' LC_ALL='en_US.UTF-8'
 ENV PATH /usr/share/logstash/bin:/sbin:$PATH
 
 # necessary for 5.0+ (overriden via "--path.settings", ignored by < 5.0)
