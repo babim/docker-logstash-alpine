@@ -4,6 +4,9 @@ FROM babim/logstash:base
 ENV LOGSTASH_VERSION 5.1.1
 ENV LOGSTASH_TARBALL="https://artifacts.elastic.co/downloads/logstash/logstash-$LOGSTASH_VERSION.tar.gz"
 
+# ensure logstash user exists
+RUN adduser -DH -s /sbin/nologin logstash
+
 # install logstash
 RUN wget --no-check-certificate --progress=bar:force -O logstash.tar.gz "$LOGSTASH_TARBALL"; \
 	dir="$(dirname "$LOGSTASH_PATH")"; \
@@ -40,3 +43,8 @@ ENV LS_SETTINGS_DIR /usr/share/logstash/config
 ENV PATH $LOGSTASH_PATH:$PATH
 ENV LANG='en_US.UTF-8' LC_ALL='en_US.UTF-8'
 ENV PATH /usr/share/logstash/bin:/sbin:$PATH
+
+VOLUME ["/etc/logstash/conf.d"]
+EXPOSE 9600 5044
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["-e", ""]

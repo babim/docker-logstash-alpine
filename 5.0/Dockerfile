@@ -2,6 +2,9 @@ FROM babim/logstash:base
 
 ENV LOGSTASH 5.0.2
 
+# ensure logstash user exists
+RUN adduser -DH -s /sbin/nologin logstash
+
 RUN cd /tmp \
   && wget --no-check-certificate --progress=bar:force -O logstash-$LOGSTASH.tar.gz https://artifacts.elastic.co/downloads/logstash/logstash-$LOGSTASH.tar.gz \
   && tar -xzf logstash-$LOGSTASH.tar.gz \
@@ -24,3 +27,8 @@ RUN set -ex \
   && if [ -f "$LS_SETTINGS_DIR/logstash.yml" ]; then \
   	sed -ri 's!^(path.log|path.config):!#&!g' "$LS_SETTINGS_DIR/logstash.yml"; \
   fi
+
+VOLUME ["/etc/logstash/conf.d"]
+EXPOSE 9600 5044
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["-e", ""]

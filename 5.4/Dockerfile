@@ -4,6 +4,9 @@ ENV LS_VERSION 5.4.3
 ENV LOGSTASH_URL "https://artifacts.elastic.co/downloads/logstash"
 ENV LOGSTASH_TARBALL "$LOGSTASH_URL/logstash-${LS_VERSION}.tar.gz"
 
+# ensure logstash user exists
+RUN adduser -DH -s /sbin/nologin logstash
+
 RUN cd /tmp \
   && wget --no-check-certificate --progress=bar:force -O logstash.tar.gz "$LOGSTASH_TARBALL"; \
   tar -xzf logstash.tar.gz \
@@ -23,3 +26,8 @@ ENV LS_SETTINGS_DIR /usr/share/logstash/config
 ENV PATH $LOGSTASH_PATH:$PATH
 ENV LANG='en_US.UTF-8' LC_ALL='en_US.UTF-8'
 ENV PATH /usr/share/logstash/bin:/sbin:$PATH
+
+VOLUME ["/etc/logstash/conf.d"]
+EXPOSE 9600 5044
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["-e", ""]
