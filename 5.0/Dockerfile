@@ -1,34 +1,23 @@
 FROM babim/logstash:base
 
-ENV LOGSTASH 5.0.2
+ENV LS_VERSION 5.0.2
+ENV LOGSTASH 5
+ENV LOGSTASH_URL "https://artifacts.elastic.co/downloads/logstash"
+ENV LOGSTASH_TARBALL "$LOGSTASH_URL/logstash-${LS_VERSION}.tar.gz"
 
-# ensure logstash user exists
-RUN adduser -DH -s /sbin/nologin logstash
-
-RUN cd /tmp \
-  && wget --no-check-certificate --progress=bar:force -O logstash-$LOGSTASH.tar.gz https://artifacts.elastic.co/downloads/logstash/logstash-$LOGSTASH.tar.gz \
-  && tar -xzf logstash-$LOGSTASH.tar.gz \
-  && mv logstash-$LOGSTASH /usr/share/logstash \
-  && rm -rf /tmp/* \
-  && apk del --purge wget ca-certificates gnupg openssl
+# install
+RUN curl -s https://raw.githubusercontent.com/babim/docker-tag-options/master/z%20ElasticStack%20install/logstash_install.sh | bash
+# remove packages
+RUN curl -s https://raw.githubusercontent.com/babim/docker-tag-options/master/z%20ElasticStack%20install/logstash_clean.sh | bash
 
 # environment
 ENV LOGSTASH_PATH /usr/share/logstash/bin
+ENV LS_SETTINGS_DIR /usr/share/logstash/config
 ENV PATH $LOGSTASH_PATH:$PATH
 ENV LANG='en_US.UTF-8' LC_ALL='en_US.UTF-8'
 ENV PATH /usr/share/logstash/bin:/sbin:$PATH
 
-# necessary for 5.0+ (overriden via "--path.settings", ignored by < 5.0)
-ENV LS_SETTINGS_DIR /etc/logstash
-# comment out some troublesome configuration parameters
-#   path.log: logs should go to stdout
-#   path.config: No config files found: /etc/logstash/conf.d/*
-RUN set -ex \
-  && if [ -f "$LS_SETTINGS_DIR/logstash.yml" ]; then \
-  	sed -ri 's!^(path.log|path.config):!#&!g' "$LS_SETTINGS_DIR/logstash.yml"; \
-  fi
-
 VOLUME ["/etc/logstash/conf.d"]
 EXPOSE 9600 5044
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["/start.sh"]
 CMD ["-e", ""]

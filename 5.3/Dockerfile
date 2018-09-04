@@ -1,24 +1,14 @@
 FROM babim/logstash:base
 
 ENV LS_VERSION 5.3.0
+ENV LOGSTASH 5
 ENV LOGSTASH_URL "https://artifacts.elastic.co/downloads/logstash"
 ENV LOGSTASH_TARBALL "$LOGSTASH_URL/logstash-${LS_VERSION}.tar.gz"
 
-# ensure logstash user exists
-RUN adduser -DH -s /sbin/nologin logstash
-
-RUN cd /tmp \
-  && wget --no-check-certificate --progress=bar:force -O logstash.tar.gz "$LOGSTASH_TARBALL"; \
-  tar -xzf logstash.tar.gz \
-  && mv logstash-$LS_VERSION /usr/share/logstash \
-  && rm -rf /tmp/* \
-  && apk del --purge wget ca-certificates gnupg openssl
-
-RUN set -ex; \
-  if [ -f "$LS_SETTINGS_DIR/log4j2.properties" ]; then \
-    cp "$LS_SETTINGS_DIR/log4j2.properties" "$LS_SETTINGS_DIR/log4j2.properties.dist"; \
-    truncate -s 0 "$LS_SETTINGS_DIR/log4j2.properties"; \
-  fi
+# install
+RUN curl -s https://raw.githubusercontent.com/babim/docker-tag-options/master/z%20ElasticStack%20install/logstash_install.sh | bash
+# remove packages
+RUN curl -s https://raw.githubusercontent.com/babim/docker-tag-options/master/z%20ElasticStack%20install/logstash_clean.sh | bash
 
 # environment
 ENV LOGSTASH_PATH /usr/share/logstash/bin
@@ -29,5 +19,5 @@ ENV PATH /usr/share/logstash/bin:/sbin:$PATH
 
 VOLUME ["/etc/logstash/conf.d"]
 EXPOSE 9600 5044
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["/start.sh"]
 CMD ["-e", ""]
