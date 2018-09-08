@@ -7,8 +7,8 @@ RUN apk add --no-cache wget bash && cd / && wget --no-check-certificate https://
 ENV VERSION 6.3.2
 ENV LOGSTASH 6
 ENV XPACK true
-ENV LOGSTASH_URL "https://artifacts.elastic.co/downloads/logstash"
-ENV LOGSTASH_TARBALL "$LOGSTASH_URL/logstash-${LS_VERSION}.tar.gz"
+ENV LS_URL "https://artifacts.elastic.co/downloads/logstash"
+ENV LS_TARBAL "$LS_URL/logstash-${LS_VERSION}.tar.gz"
 
 # install
 RUN wget --no-check-certificate -O - https://raw.githubusercontent.com/babim/docker-tag-options/master/z%20ElasticStack%20install/logstash_install.sh | bash

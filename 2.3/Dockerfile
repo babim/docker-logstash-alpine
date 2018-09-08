@@ -2,8 +2,8 @@ FROM babim/logstash:base
 
 ENV LS_VERSION 2.3.4
 ENV LOGSTASH 2
-ENV LOGSTASH_URL "https://download.elastic.co/logstash/logstash"
-ENV LOGSTASH_TARBALL "$LOGSTASH_URL/logstash-${LS_VERSION}.tar.gz"
+ENV LS_URL "https://download.elastic.co/logstash/logstash"
+ENV LS_TARBAL "$LS_URL/logstash-${LS_VERSION}.tar.gz"
 
 # install
 RUN wget --no-check-certificate -O - https://raw.githubusercontent.com/babim/docker-tag-options/master/z%20ElasticStack%20install/logstash_install.sh | bash
