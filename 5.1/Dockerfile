@@ -20,5 +20,6 @@ ENV PATH /usr/share/logstash/bin:/sbin:$PATH
 
 VOLUME ["/etc/logstash/conf.d"]
 EXPOSE 9600 5044
-ENTRYPOINT ["/start.sh"]
-CMD ["-e", ""]
+#ENTRYPOINT ["/start.sh"]
+#CMD ["-e", ""]
+CMD ["supervisord", "-nc", "/etc/supervisor/supervisord.conf"]
