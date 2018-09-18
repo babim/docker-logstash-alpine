@@ -5,5 +5,5 @@ RUN apk add --no-cache wget bash && cd / && wget --no-check-certificate https://
     chmod 755 /option.sh
 
 ENTRYPOINT ["/start.sh"]
-#CMD ["-e", ""]
-CMD ["/sbin/tini","--","/usr/bin/supervisord","-c", "/etc/supervisor/supervisord.conf"]
+CMD ["-e", ""]
+#CMD ["/sbin/tini","--","/usr/bin/supervisord","-c", "/etc/supervisor/supervisord.conf"]
