@@ -8,8 +8,6 @@ ENV LS_TARBAL "$LS_URL/logstash-${LS_VERSION}.tar.gz"
 
 # install
 RUN wget --no-check-certificate -O - https://raw.githubusercontent.com/babim/docker-tag-options/master/z%20ElasticStack%20install/logstash_install.sh | bash
-# remove packages
-RUN wget --no-check-certificate -O - https://raw.githubusercontent.com/babim/docker-tag-options/master/z%20ElasticStack%20install/logstash_clean.sh | bash
 
 # environment
 ENV LOGSTASH_PATH /usr/share/logstash/bin
@@ -20,6 +18,3 @@ ENV PATH /usr/share/logstash/bin:/sbin:$PATH
 
 VOLUME ["/etc/logstash/conf.d"]
 EXPOSE 9600 5044
-#ENTRYPOINT ["/start.sh"]
-#CMD ["-e", ""]
-CMD ["/sbin/tini","--","/usr/bin/supervisord","-c", "/etc/supervisor/supervisord.conf"]
