@@ -24,5 +24,5 @@ VOLUME ["/etc/logstash/conf.d"]
 EXPOSE 9600 5044
 
 ENTRYPOINT ["/start.sh"]
-#CMD ["-e", ""]
-CMD ["/sbin/tini","--","/usr/bin/supervisord","-c", "/etc/supervisor/supervisord.conf"]
+CMD ["-e", ""]
+#CMD ["/sbin/tini","--","/usr/bin/supervisord","-c", "/etc/supervisor/supervisord.conf"]
