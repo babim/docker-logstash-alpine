@@ -1,6 +1,6 @@
 FROM babim/logstash:base
 
-ENV LS_VERSION 6.6.0
+ENV LS_VERSION 6.6.1
 ENV LOGSTASH 6
 ENV LS_URL "https://artifacts.elastic.co/downloads/logstash"
 ENV LS_TARBAL "$LS_URL/logstash-${LS_VERSION}.tar.gz"
