@@ -4,9 +4,10 @@ ENV LS_VERSION 2.3.4
 ENV LOGSTASH 2
 ENV LS_URL "https://download.elastic.co/logstash/logstash"
 ENV LS_TARBAL "$LS_URL/logstash-${LS_VERSION}.tar.gz"
+ENV SOFT logstash
 
 # install
-RUN wget --no-check-certificate -O - https://raw.githubusercontent.com/babim/docker-tag-options/master/z%20ElasticStack%20install/logstash_install.sh | bash
+RUN curl -s https://raw.githubusercontent.com/babim/docker-tag-options/master/z%20ElasticStack%20install/${SOFT}_install.sh | bash
 
 # environment
 ENV LOGSTASH_PATH /usr/share/logstash/bin
