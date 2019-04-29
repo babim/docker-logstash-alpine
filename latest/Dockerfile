@@ -3,7 +3,7 @@ FROM babim/logstash:base
 ENV LS_VERSION 7.0.0
 ENV LOGSTASH 7
 ENV LS_URL "https://artifacts.elastic.co/downloads/logstash"
-ENV LS_TARBAL "$LS_URL/logstash-${LS_VERSION}.tar.gz"
+ENV LS_TARBAL "$LS_URL/logstash-oss-${LS_VERSION}.tar.gz"
 ENV SOFT logstash
 
 # install
